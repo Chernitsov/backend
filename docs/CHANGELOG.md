@@ -5,3 +5,4 @@
 - add CHANGELOG.md
 - comment out AWS Module
 - set up environment
+- add post module
