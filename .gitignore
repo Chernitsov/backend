@@ -39,6 +39,7 @@ config/development.yml
 config/production.yml
 
 # Docker files
+docker/*
 docker-compose.yml
 
 # Compodoc documentation

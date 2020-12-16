@@ -3,7 +3,7 @@ import * as config from 'config';
 import { join } from 'path';
 
 const dbConfig = config.get('db');
-  
+
 const typeOrmConfig: TypeOrmModuleOptions = {
   type: dbConfig.type,
   host: process.env.RDS_HOSTNAME || dbConfig.host,
@@ -18,8 +18,8 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   migrationsRun: dbConfig.migrationsRun,
   migrations: [join(__dirname, '..', 'migrations', '*.{ts,js}')],
   cli: {
-      migrationsDir: join('src', 'database' ,'migrations')
-  }
+    migrationsDir: join('src', 'database', 'migrations'),
+  },
 };
 
 module.exports = typeOrmConfig;
