@@ -4,28 +4,27 @@ import { AbstractDto } from '../../../commun/dto/abstract.dto';
 import { TaskDto } from '../../task/dto/task.dto';
 
 @Exclude()
-export class UserDto extends AbstractDto{
+export class UserDto extends AbstractDto {
+  @Expose()
+  username: string;
 
-    @Expose()
-    username: string;
+  @Expose()
+  firstName: string;
 
-    @Expose()
-    firstName: string;
+  @Expose()
+  lastName: string;
 
-    @Expose()
-    lastName: string;
+  @Expose()
+  phone: string;
 
-    @Expose()
-    phone: string;
-    
-    password: string;
+  password: string;
 
-    salt: string;
+  salt: string;
 
-    @Expose()
-    @Type(() => TaskDto)
-    tasks: TaskDto[];
+  @Expose()
+  @Type(() => TaskDto)
+  tasks: TaskDto[];
 
-    @Expose()
-    role: UserRole;
+  @Expose()
+  role: UserRole;
 }
