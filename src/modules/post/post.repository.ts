@@ -11,10 +11,7 @@ import { plainToClass } from 'class-transformer';
 export class PostRepository extends Repository<PostEntity> {
   private logger = new Logger('PostRepository');
 
-  async getPosts(
-    filterDto: GetPostsFilterDto,
-    user: UserEntity,
-  ): Promise<PostDto[]> {
+  async getPosts(filterDto: GetPostsFilterDto): Promise<PostDto[]> {
     const { search } = filterDto;
     const query = this.createQueryBuilder('post');
 
@@ -28,9 +25,7 @@ export class PostRepository extends Repository<PostEntity> {
     }
 
     try {
-      const posts = await query
-        .leftJoinAndSelect('post.user', 'user')
-        .getMany();
+      const posts = await query.getMany();
       return plainToClass(PostDto, posts);
     } catch (error) {
       this.logger.error(error.message, error.stack);
@@ -42,12 +37,13 @@ export class PostRepository extends Repository<PostEntity> {
     createPostDto: CreatePostDto,
     user: UserEntity,
   ): Promise<PostDto> {
-    const { title, description } = createPostDto;
+    const { title, description, text } = createPostDto;
 
     const post = new PostEntity();
     post.title = title;
     post.description = description;
     post.user = user;
+    post.text = text;
 
     try {
       const result = await this.save(post);

@@ -9,22 +9,27 @@ import { RegisterCredentialsDto } from '../dto/register-credentials.dto';
 import { UserDto } from '../../user/dto/user.dto';
 import { plainToClass } from 'class-transformer';
 
-
 @Injectable()
 export class AuthService {
   private logger = new Logger('AuthService');
 
   constructor(
-            @InjectRepository(AuthRepository) private authRepository: AuthRepository,
-            private jwtService: JwtService,
-          ) {}
+    @InjectRepository(AuthRepository) private authRepository: AuthRepository,
+    private jwtService: JwtService,
+  ) {}
 
-  async signUp(registerCredentialsDto: RegisterCredentialsDto): Promise<UserDto> {
+  async signUp(
+    registerCredentialsDto: RegisterCredentialsDto,
+  ): Promise<UserDto> {
     return this.authRepository.signUp(registerCredentialsDto);
   }
 
-  async signIn(loginCredentialsDto: LoginCredentialsDto): Promise<{ accessToken: string }> {
-    const username = await this.authRepository.validateUserPassword(loginCredentialsDto);
+  async signIn(
+    loginCredentialsDto: LoginCredentialsDto,
+  ): Promise<{ accessToken: string; expiresDate: string }> {
+    const username = await this.authRepository.validateUserPassword(
+      loginCredentialsDto,
+    );
 
     if (!username) {
       throw new UnauthorizedException('Invalid credentials');
@@ -32,12 +37,15 @@ export class AuthService {
 
     const payload: JwtPayload = { username };
     const accessToken = await this.jwtService.sign(payload);
-    this.logger.debug(`Generated JWT Token with payload ${JSON.stringify(payload)}`);
+    const expiresDate = this.jwtService.verify(accessToken).exp;
+    this.logger.debug(
+      `Generated JWT Token with payload ${JSON.stringify(payload)}`,
+    );
 
-    return { accessToken };
+    return { accessToken, expiresDate };
   }
 
-  getAuthenticatedUser(user: UserEntity) : UserDto{
-    return  plainToClass(UserDto,  user);
+  getAuthenticatedUser(user: UserEntity): UserDto {
+    return plainToClass(UserDto, user);
   }
 }

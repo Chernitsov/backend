@@ -22,7 +22,6 @@ import { AuthUser } from 'src/commun/decorators';
 import { PostDto } from './dto/post.dto';
 
 @Controller('posts')
-@UseGuards(AuthGuard())
 export class PostsController {
   private logger = new Logger('PostsController');
 
@@ -31,24 +30,16 @@ export class PostsController {
   @Get()
   getPosts(
     @Query(ValidationPipe) filterDto: GetPostsFilterDto,
-    @AuthUser() user: UserEntity,
   ): Promise<PostDto[]> {
-    this.logger.verbose(
-      `User "${user.username}" retrieving all posts. Filters: ${JSON.stringify(
-        filterDto,
-      )}`,
-    );
-    return this.postsService.getPosts(filterDto, user);
+    return this.postsService.getPosts(filterDto);
   }
 
   @Get('/:id')
-  getPostById(
-    @Param('id', ParseIntPipe) id: number,
-    @AuthUser() user: UserEntity,
-  ): Promise<PostDto> {
-    return this.postsService.getPostById(id, user);
+  getPostById(@Param('id', ParseIntPipe) id: number): Promise<PostDto> {
+    return this.postsService.getPostById(id);
   }
 
+  @UseGuards(AuthGuard())
   @Post()
   @UsePipes(ValidationPipe)
   createPost(
@@ -63,6 +54,7 @@ export class PostsController {
     return this.postsService.createPost(createPostDto, user);
   }
 
+  @UseGuards(AuthGuard())
   @Delete('/:id')
   deletePost(
     @Param('id', ParseIntPipe) id: number,
@@ -71,6 +63,7 @@ export class PostsController {
     return this.postsService.deletePost(id, user);
   }
 
+  @UseGuards(AuthGuard())
   @Patch('/:id')
   updatePost(
     @Param('id', ParseIntPipe) id: number,

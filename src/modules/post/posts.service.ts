@@ -13,17 +13,13 @@ export class PostsService {
     @InjectRepository(PostRepository) private postRepository: PostRepository,
   ) {}
 
-  async getPosts(
-    filterDto: GetPostsFilterDto,
-    user: UserEntity,
-  ): Promise<PostDto[]> {
-    return this.postRepository.getPosts(filterDto, user);
+  async getPosts(filterDto: GetPostsFilterDto): Promise<PostDto[]> {
+    return this.postRepository.getPosts(filterDto);
   }
 
-  async getPostById(id: number, user: UserEntity): Promise<PostDto> {
+  async getPostById(id: number): Promise<PostDto> {
     const found = await this.postRepository.findOne({
       where: { id: id },
-      relations: ['user'],
     });
 
     if (!found) {
@@ -58,7 +54,7 @@ export class PostsService {
     createPostDto: CreatePostDto,
     user: UserEntity,
   ): Promise<PostDto> {
-    const post = await this.getPostById(id, user);
+    const post = await this.getPostById(id);
     post.title = createPostDto.title;
     post.description = createPostDto.description;
     post.text = createPostDto.text;
