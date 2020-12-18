@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { GetPostsFilterDto } from './dto/get-posts-filter.dto';
 import { PostRepository } from './post.repository';
@@ -9,6 +14,8 @@ import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class PostsService {
+  private logger = new Logger('PostService');
+
   constructor(
     @InjectRepository(PostRepository) private postRepository: PostRepository,
   ) {}
@@ -18,15 +25,29 @@ export class PostsService {
   }
 
   async getPostById(id: number): Promise<PostDto> {
-    const found = await this.postRepository.findOne({
-      where: { id: id },
+    const query = this.postRepository.createQueryBuilder('post');
+
+    query.addSelect('user.username');
+    query.addSelect('user.id');
+    query.addSelect('user.firstName');
+    query.addSelect('user.lastName');
+    query.andWhere('(post.id = :id)', {
+      id: id,
     });
+    query.leftJoin('post.user', 'user');
 
-    if (!found) {
-      throw new NotFoundException(`Post with ID "${id}" not found`);
+    try {
+      const found = await query.getOne();
+
+      if (!found) {
+        throw new NotFoundException(`Post with ID "${id}" not found`);
+      }
+
+      return plainToClass(PostDto, found);
+    } catch (error) {
+      this.logger.error(error.message, error.stack);
+      throw new InternalServerErrorException();
     }
-
-    return plainToClass(PostDto, found);
   }
 
   async createPost(
@@ -37,6 +58,8 @@ export class PostsService {
   }
 
   async deletePost(id: number, user: UserEntity): Promise<any> {
+    // TODO: CHECK IF POST IS FROM USER
+
     const result = await this.postRepository.delete(id);
 
     if (result.affected === 0) {
@@ -54,7 +77,10 @@ export class PostsService {
     createPostDto: CreatePostDto,
     user: UserEntity,
   ): Promise<PostDto> {
+    // TODO: CHECK IF POST IS FROM USER
+
     const post = await this.getPostById(id);
+
     post.title = createPostDto.title;
     post.description = createPostDto.description;
     post.text = createPostDto.text;

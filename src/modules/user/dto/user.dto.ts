@@ -22,11 +22,11 @@ export class UserDto extends AbstractDto {
 
   salt: string;
 
-  @Expose()
+  /* @Expose() */
   @Type(() => TaskDto)
   tasks: TaskDto[];
 
-  @Expose()
+  /* @Expose() */
   @Type(() => PostDto)
   posts: PostDto[];
 

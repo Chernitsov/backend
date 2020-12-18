@@ -47,6 +47,7 @@ export class PostRepository extends Repository<PostEntity> {
 
     try {
       const result = await this.save(post);
+      console.log(result);
       return plainToClass(PostDto, result);
     } catch (error) {
       this.logger.error(error.message, error.stack);

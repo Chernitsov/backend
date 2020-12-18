@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude, Expose, Transform, Type } from 'class-transformer';
-import { UserEntity } from 'src/modules/user/user.entity';
+import { Exclude, Expose, Type } from 'class-transformer';
 import { AbstractDto } from '../../../commun/dto/abstract.dto';
 import { UserDto } from '../../user/dto/user.dto';
 
@@ -19,7 +18,6 @@ export class PostDto extends AbstractDto {
   text: string;
 
   @ApiProperty()
-  @Expose()
   userId: number;
 
   @ApiProperty()
