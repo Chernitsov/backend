@@ -32,7 +32,7 @@ export class AuthService {
     );
 
     if (!username) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('INVALID_CREDENTIALS');
     }
 
     const payload: JwtPayload = { username };
