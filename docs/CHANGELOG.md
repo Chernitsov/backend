@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 18.12.2020
+
+- playing and struggling with TypeORM
+- add userinformation to the post
+
 ## 17.12.2020
 
 - dirty connect app with FE
