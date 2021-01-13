@@ -1,17 +1,8 @@
-# Backend
+# BACKEND
 
-## Todos
+## DOCS
 
-- [x] Run environment
-- [ ] Check Authentication compatibility with FE
-  - [ ] Login
-- [ ] Create Post API
-  - [ ] create
-  - [ ] get / getall
-  - [ ] delete
-  - [ ] update
-
-## More Todos
-
-- [ ] Explore / understand migrations (bring it to work correctly)
-- [ ] Explore AWS / minio (WTF is that and i really need this?)
+- [Environment Documentation](/docs/ENVIRONMENT.md)
+- [Migration Documentation](/docs/MIGRATIONS.md)
+- [Changelog](/docs/CHANGELOG.md)
+- [Todo](/docs/TODO.md)
